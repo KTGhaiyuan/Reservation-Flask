@@ -1,8 +1,8 @@
 from flask import Flask,redirect,url_for,render_template
-import config
+# import config
 
 app = Flask(__name__)
-app.config.from_object(config)
+# app.config.from_object(config)
 
 
 @app.route('/')
@@ -27,4 +27,4 @@ def room_info():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
