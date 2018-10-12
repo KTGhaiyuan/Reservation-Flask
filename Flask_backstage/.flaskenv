@@ -1,2 +1,3 @@
 FLASK_ENV=development
 FLASK_DEBUG=True
+JWT_SECRET_KEY=
