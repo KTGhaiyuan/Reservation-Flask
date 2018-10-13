@@ -2,6 +2,7 @@ from flask import Flask,redirect,url_for,render_template,jsonify,request
 from flask_jwt_extended import (JWTManager,jwt_required,create_access_token,get_jwt_identity,jwt_optional)
 from flask_pymongo import PyMongo,ObjectId
 import pymongo.errors
+import datetime
 app = Flask(__name__)
 
 #change this config on product env
@@ -50,7 +51,6 @@ def login():
     if "username" in request.form and "password" in request.form:
         username=request.form["username"]
         password=request.form["password"]
-
         user=mongo.db.user.find_one({"username":username,"password":password})
 
         if(user==None):
@@ -87,12 +87,82 @@ def test():
     return "sdf"
 
 
-@app.route('/reservation/')
+@app.route('/reservation/',methods=['POST'])
+@jwt_required
 def reservation():
-    return  "sfsafsaf"
-@app.route('/room_info/')
-def room_info():
-    return  "fsaf"
+    currentuser = get_jwt_identity()
+    if (currentuser):
+        assert "classroom" in request.form
+        assert "sunday" in request.form
+        assert "time" in request.form
+        assert "date" in request.form
+
+        if "classroom" in request.form and "sunday" in request.form and "time" in request.form:
+            classroom = request.form['classroom']
+            sunday = request.form['sunday']
+            time = request.form['time']
+            date=request.form['date']
+
+            useroom=mongo.db.using.find({"classroom":classroom,"sunday":sunday,"time":time,"date":date})
+            if useroom!=None:
+                return jsonify({"error":1,"msg":"Already scheduled"})
+            else:
+                mongo.db.using.insert({"classroom":classroom,"sunday":sunday,"time":time,"date":date})
+                return  jsonify({"msg":"Scheduled Successful!"})
+
+
+        else:
+            return jsonify({"error":"1","msg":"Reaservation information should be completed"})
+
+    else:
+        return jsonify({"error":"please log in first"})
+
+
+
+@app.route('/room/',methods=['POST','GET'])
+@jwt_required
+def room():
+    currentuser=get_jwt_identity()
+    if(currentuser):
+        assert "classroom" in request.form
+        assert "sunday" in request.form
+        assert "time" in request.form
+        assert "date" in request.form
+
+        now=datetime.datetime.now()
+        start=datetime.datetime(2018,9,3,0,0,0,000000)
+        diff=(now-start).days*24*60*60+(now-start).seconds
+        week=int(diff/(7*24*60*60))+1
+        # sunday=(int(diff%(7*24*60*60)/(24*60*60)))+1
+        # hour=int(((diff%(7*24*60*60)%(24*60*60)))/(60*60))
+        # minute=int((((diff%(7*24*60*60)%(24*60*60)))%(60*60))/60)-4
+
+        if "classroom" in request.form and  "sunday" in request.form  and  "time" in request.form:
+            classroom=request.form['classroom']
+            sunday = request.form['sunday']
+            time = request.form['time']
+            date=request.form['date']
+            rooms=mongo.db.course.find({"classroom":classroom,"sunday":sunday,"time":time})
+            for  room  in rooms:
+                if  week  in  room['date']:
+                    return jsonify({"result":"1","msg":"youke"})
+
+            use=mongo.db.using.find({"classroom":classroom,"sunday":sunday,"time":time,"date":date})
+            if use!=None:
+                return jsonify({"msg":"Already scheduled"})
+            else:
+                return jsonify({"msg":"Can be booked"})
+
+
+
+        else:
+            return jsonify({"error":"1","msg":"Information should be completed"})
+
+
+
+    else:
+        return jsonify({"error":"please login in first"})
+
 
 
 

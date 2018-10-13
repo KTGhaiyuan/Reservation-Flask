@@ -22,10 +22,12 @@ def get_scheule(url):
 
         if len(cours.find_all('td')) < 17:
             room['classroom'] = cours.find_all('td')[6].string.strip()
+            room['sunday']=cours.find_all('td')[1].string.strip()
             room['time'] = cours.find_all('td')[2].string.strip()
             date_day = cours.find_all('td')[0].string.strip()
         else:
             room['classroom'] = cours.find_all('td')[17].string.strip()
+            room['sunday'] = cours.find_all('td')[14].string.strip()
             room['time'] = cours.find_all('td')[13].string.strip()
             date_day = cours.find_all('td')[11].string.strip()
 
@@ -71,7 +73,7 @@ def get_scheule(url):
 if __name__=='__main__':
     # url='http://urp.hebau.edu.cn:9001/xkAction.do?actionType=6'
     client = pymongo.MongoClient('localhost', 27017)
-    schedules = client['schedule']
+    schedules = client['reservation']
     rooms = schedules['course']
     for i in range(1, 20):
         with  open('class/学生选课结果{}.html'.format(i), 'r')  as  f:
