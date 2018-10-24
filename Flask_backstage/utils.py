@@ -8,19 +8,15 @@ def hourtonlessons(h, season="winter"):
     if (h >= 8 and h <= 9.67):
         return 1
     elif (h >= 10 and h <= 11.67):
-        return 2
+        return 3
 
     if season == "winter":
         if (h >= 14 and h <= 15.67):
-            return 3
-        elif (h >= 15.82 and h <= 17.5):
-            return 4
-        elif (h >= 18 and h <= 18.75):
             return 5
-        elif (h >= 18.60 and h <= 19.67):
-            return 6
-        elif (h >= 19.82 and h <= 19.59):
+        elif (h >= 15.82 and h <= 17.68):
             return 7
+        elif (h >= 18 and h <= 19.67):
+            return 9
         else:
             return 0
     elif season == "summer":

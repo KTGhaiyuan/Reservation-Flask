@@ -8,72 +8,7 @@ import datetime
 import utils
 
 app = Flask(__name__)
-allroom = [
-    "101",
-    "111",
-    "105",
-    "108",
-    "201",
-    "202",
-    "204",
-    "205",
-    "208",
-    "212",
-    "301",
-    "302",
-    "304",
-    "305",
-    "308",
-    "310",
-    "312",
-    "第一电教室",
-    "第三电教室",
-    "第五电教室",
-    "第六电教室",
-    "第七电教室",
-    "第二电教室",
-    '新平一',
-    '新平二',
-    '新平三',
-    '新平四',
-    "食品实验室",
-    "生物实验室一",
-    "生物实验室二",
-    "生物实验室三",
-    "生物实验室四",
-    "无机实验室",
-    "有机实验室",
-    "水化实验室",
-    "生化实验室",
-    "第三机房",
-    "第四机房",
-    "第五机房",
-    "第六机房",
-    "第一机房",
-    "第二机房",
-    "语音室02",
-    "第12机房",
-    "第34机房",
-    "新语音室",
-    '旧语音室',
-    "电工电子实验室",
-    "金相实验室",
-    "发动机构造实验室",
-    "汽车维修实验室",
-    "发动机性能实验室",
-    "汽车电气实验室",
-    "电喷发动机试验室",
-    "汽车综合实习车间",
-    "基础实验室",
-    "冷库",
-    "空调实验室",
-    "制冷机械设备实验室",
-    "小型制冷实验室",
-    "旧平一",
-    "综合车间",
-    "绘图室",
-    "显微镜实验室",
-]
+allroom = ["101","111","105","108","201","202","204","205","208","212","301","302","304","305","308","310","312","第一电教室","第三电教室","第五电教室","第六电教室","第七电教室","第二电教室", "新平一","新平二","新平三","新平四","食品实验室","生物实验室一","生物实验室二","生物实验室三","生物实验室四","无机实验室","有机实验室","水化实验室","生化实验室","第三机房","第四机房","第五机房","第六机房","第一机房","第二机房","语音室02","第12机房", "第34机房","新语音室","旧语音室","电工电子实验室","金相实验室","发动机构造实验室","汽车维修实验室","发动机性能实验室","汽车电气实验室","电喷发动机试验室","汽车综合实习车间","基础实验室","冷库","空调实验室","制冷机械设备实验室","小型制冷实验室","旧平一","综合车间","绘图室","显微镜实验室"]
 
 
 # change this config on product env
@@ -83,11 +18,12 @@ app.config['JWT_SECRET_KEY'] = 'super-secret'
 app.config["SECRET_KEY"] = "super secret key"
 app.config["JWT_TOKEN_LOCATION"] = ['headers', 'cookies']
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False
+app.config["JWT_COOKIE_CSRF_PROTECT"]=False
 # app.secret_key = "super secret key"
 mongo = PyMongo(app)
 jwt = JWTManager(app)
 
-print(mongo.db.course.find_one({"classroom": "101", "sunday": "2", "time": "三", "date": 1}))
+# print(mongo.db.course.find_one({"classroom": "111", "sunday": "4", "time": "九","date":3}))
 
 
 
@@ -175,7 +111,7 @@ def login():
 
         if (user == None):
             if ("json" in request.headers and request.headers["json"] == "1"):
-                return jsonify({"error": "1", "errmsg": "Bad username or password,login failed"})
+                return jsonify({"error": "1", "errmsg": "Bad username or password,` failed"})
             else:
                 flash("登录失败,请检查用户名或密码", "danger")
                 return redirect(url_for("login"))
@@ -210,44 +146,43 @@ def testoptional():
         return jsonify({"error": 1, "errmsg": "No access"})
 
 
-@app.route('/reservation', methods=['POST'])
+@app.route('/reservation', methods=['POST','GET'])
 @jwt_required
 def reservation():
-    currentuser = get_jwt_identity()
-    if (currentuser):
-        assert "classroom" in request.form
-        assert "sunday" in request.form
-        assert "time" in request.form
-        assert "date" in request.form
+    if(request.method=="POST"):
+        currentuser = get_jwt_identity()
+        if (currentuser):
+            assert "classroom" in request.form
+            assert "sunday" in request.form
+            assert "time" in request.form
+            assert "date" in request.form
 
-        if "classroom" in request.form and "sunday" in request.form and "time" in request.form:
-            classroom = request.form['classroom']
-            sunday = request.form['sunday']
-            time = request.form['time']
-            date = request.form['date']
+            if "classroom" in request.form and "sunday" in request.form and "time" in request.form:
+                classroom = request.form['classroom']
+                sunday = request.form['sunday']
+                time = request.form['time']
+                date = request.form['date']
 
-            useroom = mongo.db.using.find({"classroom": classroom, "sunday": sunday, "time": time, "date": date})
-            if useroom != None:
-                return jsonify({"error": 1, "msg": "Already scheduled"})
+                useroom = mongo.db.using.find_one({"classroom": classroom, "sunday": sunday, "time": time, "date": date})
+                if useroom != None:
+                    return jsonify({"error": 1, "msg": "Already scheduled"})
+                else:
+                    mongo.db.using.insert({"classroom": classroom, "sunday": sunday, "time": time, "date": date, 'user': currentuser})
+                    return jsonify({"msg": "Reservation Successful!"})
+
+
             else:
-                mongo.db.using.insert(
-                    {"classroom": classroom, "sunday": sunday, "time": time, "date": date, 'user': currentuser})
-
-                return jsonify({"msg": "Scheduled Successful!"})
-
+                return jsonify({"error": "1", "msg": "Reaservation information should be completed"})
 
         else:
-            return jsonify({"error": "1", "msg": "Reaservation information should be completed"})
-
-    else:
-        return jsonify({"error": "please log in first"})
-
+            return jsonify({"error": "please log in first"})
+    elif(request.method=="GET"):
+        return render_template("reservation.html")
 
 @app.route("/")
 @jwt_required
 def index():
     currentuser = get_jwt_identity()
-
     if (currentuser):
         now = datetime.datetime.now()
         start = datetime.datetime(2018, 9, 3, 0, 0, 0, 000000)
@@ -260,15 +195,14 @@ def index():
         time=utils.numtozh(utils.hourtonlessons(hour))
         roomstats = {}
         for i in allroom:
-            print(str(i),str(week),str(time),dijizhou)
-            print(mongo.db.course.find_one({"classroom": str(i), "sunday": str(week), "time": str(time),"date":dijizhou}))
-            if (mongo.db.course.find_one({"classroom": str(i), "sunday": str(week), "time": str(time),"date":dijizhou})!=None):
+            yes=mongo.db.course.find_one({"classroom": str(i), "sunday": str(week), "time": str(time), "date": dijizhou})
+            yuding=mongo.db.using.find_one({"classroom": str(i), "sunday": str(week), "time": str(time),"date": str(dijizhou)})
+            if (yes!=None):
                 roomstats[i] = "youke"
-            elif (mongo.db.using.find({"classroom": i, "sunday": week, "time": time})):
+            elif (yuding!=None):
                 roomstats[i] = "yuding"
             else:
                 roomstats[i] = "keyuding"
-
 
         return render_template("index.html",roomstatsitems=roomstats.items())
     else:

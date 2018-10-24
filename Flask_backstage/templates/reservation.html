@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block  body %}
+
+    <form action="/reservation" method="post">
+        教室: <input type="text" name="classroom"><br>
+        星期: <input type="text" name="sunday"><br>
+        第几节课: <input type="text" name="time"><br>
+        第几周: <input type="text" name="date"><br>
+        <button type="submit">预定</button>
+    </form>
+
+
+{% endblock %}
