@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 
 {% block  body %}
-    姓名: <input type="text"><br>
-    ID : <input type="text"><br>
-    PASSWORD : <input type="text">
+
+    <form action="/register" method="post">
+
+
+    姓名: <input type="text" name="actual_name"><br>
+    ID : <input type="text" name="username"><br>
+    密码 : <input type="password" name="password"><br>
+    重复密码 : <input type="text" name="repeat_password"><br>
+    身份:<input type="text" name="identity"><br>
+
+        <button type="submit">提交</button>
+</form>
 
 
 {% endblock %}

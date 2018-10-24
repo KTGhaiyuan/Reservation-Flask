@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block body %}
+    {% for roomname,status in roomstatsitems %}
+        <div>
+        {{ roomname }}
+        :
+        {{ status }}
+        </div>
+    {% endfor %}
+{% endblock %}

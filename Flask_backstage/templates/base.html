@@ -2,11 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <link rel="shortcut icon" href="{{ url_for("static",filename="img/book.png") }}">
+    {% include "global/bootstrap.html" %}
+    {% block stylesheet %} {% endblock %}
     <title>{% block title %}{% endblock %}</title>
     {% block  head %}{% endblock %}
 </head>
 <body>
-    {% block  body %}
-    {% endblock %}
+{% block flashmsg %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+    {% endwith %}
+
+{% endblock %}
+
+{% block  body %}
+{% endblock %}
 </body>
 </html>
