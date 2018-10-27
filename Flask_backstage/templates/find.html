@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}查找{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="../static/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/find.css">
+{% endblock %}
+
+{% block body %}
+
+    <form action='/find' method="post">
+        <div class="identity_form container">
+		  <div class="form-group">
+		    <label for="exampleInputEmail1">教室名称</label>
+		    <input type="text" class="form-control" id="className" placeholder="新平三/旧教101/电六" required="required" name="classroom">
+		  </div>
+            <div class="form-group">
+		    <label for="exampleInputEmail1">星期</label>
+		    <input type="text" class="form-control"  placeholder="星期xxx" required="required" name="sunday">
+		  </div>
+            <div class="form-group">
+		    <label for="exampleInputEmail1">第几节课</label>
+		    <input type="text" class="form-control"  placeholder="第xxx周" required="required" name="time">
+		  </div>
+            <div class="form-group">
+		    <label for="exampleInputEmail1">第几周</label>
+		    <input type="text" class="form-control" placeholder="第xxx周" required="required" name="date">
+		  </div>
+{#		  <div class="form-group">#}
+{#		    <label for="exampleInputEmail1">查询日期</label>#}
+{#		    <input type="date" class="form-control" id="date" required="required">#}
+{#		  </div>#}
+		  <button class="btn btn-primary" type="submit">查询</button>
+{#		  <button type="button" class="btn btn-warning" style="display: none;" disabled="disabled">不可预约</button>#}
+{#		  <button type="submit" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-sm" style="display: none;">可预约，立即预约</button>#}
+{#		  <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" >#}
+{#		    <div class="modal-dialog modal-sm" role="document">#}
+{#		      <div class="modal-content">#}
+{#		        预约成功！#}
+{#		      </div>#}
+{#		    </div>#}
+{#		  </div>#}
+
+        </div>
+        </form>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+{% block end %}
+    <script src="../static/lib/jquery/jquery.js"></script>
+	<script src="../static/js/identity.js"></script>
+	<script src="../static/lib/bootstrap/js/bootstrap.js"></script>
+{% endblock %}

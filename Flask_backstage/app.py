@@ -61,38 +61,42 @@ def test():
 def register():
     if (request.method == "GET"):
         return render_template("register.html")
+    elif(request.method=="POST"):
+        assert "actual_name" in request.form
+        assert "username" in request.form
+        assert "password" in request.form
+        assert "identity" in request.form
+        assert "repeat_password" in request.form
 
-    assert "actual_name" in request.form
-    assert "username" in request.form
-    assert "password" in request.form
-    assert "identity" in request.form
-    assert "repeat_password" in request.form
+        if (request.form["password"] != request.form["repeat_password"]):
+            return jsonify({"error": "1", "errmsg": "Inconsistent password"})
+        else:
+            actual_name = request.form["actual_name"]
+            username = request.form["username"]
+            identity = request.form["identity"]
+            password = request.form["password"]
+            try:
+                user=mongo.db.user.find_one({"actual_name": str(actual_name),"username":str(username)})
+                if user!=None:
+                    return redirect(url_for("/"))
+                else:
+                    mongo.db.user.insert(
+                        {"actual_name": actual_name, "username": username, "password": password, "identity": identity})
+                    #return "注册成功"
 
-    if (request.form["password"] != request.form["repeat_password"]):
-        return jsonify({"error": "1", "errmsg": "Inconsistent password"})
-    else:
-        actual_name = request.form["actual_name"]
-        username = request.form["username"]
-        identity = request.form["identity"]
-        password = request.form["password"]
-        try:
-            mongo.db.user.insert(
-                {"actual_name": actual_name, "username": username, "password": password, "identity": identity})
-            # return "注册成功"
-
-            if ("json" in request.headers and request.headers["json"] == "1"):
-                return jsonify({"errmsg": "register successful", "error": "0"})
-            else:
-                flash("注册成功", "success")
-                resp=make_response(redirect(url_for("index")))
-                resp.set_cookie("access_token_cookie",create_access_token(identity=username,expires_delta=False))
-                return resp
-        except:
-            if ("json" in request.headers and request.headers["json"] == "1"):
-                return jsonify({"error": "1", "errmsg": "Unknow error"})
-            else:
-                flash("注册失败", "danger")
-                return redirect(url_for("register"))
+                    if ("json" in request.headers and request.headers["json"] == "1"):
+                        return jsonify({"msg": "register successful", "error": "0"})
+                    else:
+                        flash("注册成功", "success")
+                        resp=make_response(redirect(url_for("index")))
+                        resp.set_cookie("access_token_cookie",create_access_token(identity=username,expires_delta=False))
+                        return resp
+            except:
+                if ("json" in request.headers and request.headers["json"] == "1"):
+                    return jsonify({"error": "1", "errmsg": "Unknow error"})
+                else:
+                    flash("注册失败", "danger")
+                    return redirect(url_for("register"))
 
 
 
@@ -179,7 +183,7 @@ def reservation():
     elif(request.method=="GET"):
         return render_template("reservation.html")
 
-@app.route("/")
+@app.route("/",methods=['GET',"POST"])
 @jwt_required
 def index():
     currentuser = get_jwt_identity()
@@ -187,91 +191,95 @@ def index():
         now = datetime.datetime.now()
         start = datetime.datetime(2018, 9, 3, 0, 0, 0, 000000)
         diff = (now - start).days * 24 * 60 * 60 + (now - start).seconds
-        week=now.weekday()+1
+        week = now.weekday() + 1
 
         dijizhou = int(diff / (7 * 24 * 60 * 60)) + 1
         hour = float(((diff % (7 * 24 * 60 * 60) % (24 * 60 * 60))) / (60.0 * 60))
 
-        time=utils.numtozh(utils.hourtonlessons(hour))
+        time = utils.numtozh(utils.hourtonlessons(hour))
         roomstats = {}
         for i in allroom:
-            yes=mongo.db.course.find_one({"classroom": str(i), "sunday": str(week), "time": str(time), "date": dijizhou})
-            yuding=mongo.db.using.find_one({"classroom": str(i), "sunday": str(week), "time": str(time),"date": str(dijizhou)})
-            if (yes!=None):
+            yes = mongo.db.course.find_one(
+                {"classroom": str(i), "sunday": str(week), "time": str(time), "date": dijizhou})
+            yuding = mongo.db.using.find_one(
+                {"classroom": str(i), "sunday": str(week), "time": str(time), "date": str(dijizhou)})
+            if (yes != None):
                 roomstats[i] = "youke"
-            elif (yuding!=None):
+            elif (yuding != None):
                 roomstats[i] = "yuding"
             else:
                 roomstats[i] = "keyuding"
 
-        return render_template("index.html",roomstatsitems=roomstats.items())
+        return render_template("index.html", roomstatsitems=roomstats.items())
     else:
-        return jsonify({"error": "please login in first"})
+        return redirect(url_for("login"))
 
 
 @app.route('/cancel')
 @jwt_required
 def cancel():
-    assert "classroom" in request.form
-    assert "sunday" in request.form
-    assert "time" in request.form
-    assert "date" in request.form
-    currentuser = get_jwt_identity()
-    classroom = request.form['classroom']
-    sunday = request.form['sunday']
-    time = request.form['time']
-    date = request.form['date']
-    if (currentuser):
-        try:
-            mongo.db.using.remove(
-                {"classroom": classroom, "sunday": sunday, "time": time, "date": date, 'user': currentuser})
-        except:
-            return jsonify({"error": "Please submit the correct room"})
-
-    else:
-        return jsonify({"error": "please login in first"})
-
-
-@app.route('/room/', methods=['POST', 'GET'])
-@jwt_required
-def room():
-    currentuser = get_jwt_identity()
-    if (currentuser):
+    if(request.method=="POST"):
         assert "classroom" in request.form
         assert "sunday" in request.form
         assert "time" in request.form
         assert "date" in request.form
-
-        now = datetime.datetime.now()
-        start = datetime.datetime(2018, 9, 3, 0, 0, 0, 000000)
-        diff = (now - start).days * 24 * 60 * 60 + (now - start).seconds
-        week = int(diff / (7 * 24 * 60 * 60)) + 1
-        # sunday=(int(diff%(7*24*60*60)/(24*60*60)))+1
-        # hour=int(((diff%(7*24*60*60)%(24*60*60)))/(60*60))
-        # minute=int((((diff%(7*24*60*60)%(24*60*60)))%(60*60))/60)-4
-
-        if "classroom" in request.form and "sunday" in request.form and "time" in request.form:
+        currentuser = get_jwt_identity()
+        if(currentuser):
             classroom = request.form['classroom']
             sunday = request.form['sunday']
             time = request.form['time']
             date = request.form['date']
-            rooms = mongo.db.course.find({"classroom": classroom, "sunday": sunday, "time": time})
-            for room in rooms:
-                if week in room['date']:
-                    return jsonify({"result": "1", "msg": "youke"})
-
-            use = mongo.db.using.find({"classroom": classroom, "sunday": sunday, "time": time, "date": date})
-            if use != None:
-                return jsonify({"msg": "Already scheduled"})
-            else:
-                return jsonify({"msg": "Can be booked"})
-
-
-
+            if (currentuser):
+                try:
+                    mongo.db.using.remove({"classroom": str(classroom), "sunday": str(sunday), "time": str(time), "date": date, 'user': str(currentuser)})
+                    flash("取消成功!")
+                    return redirect(url_for('/'))
+                except:
+                    return jsonify({"error": "Please submit the correct room"})
         else:
-            return jsonify({"error": "1", "msg": "Information should be completed"})
-    else:
-        return jsonify({"error": "please login in first"})
+            return jsonify({"error": "please login in first"})
+    # elif(request.method=='GET'):
+    #     return render_template('')
+
+@app.route('/find', methods=['POST', 'GET'])
+@jwt_required
+def find():
+    currentuser = get_jwt_identity()
+    if(request.method=="POST"):
+        if (currentuser):
+            assert "classroom" in request.form
+            assert "sunday" in request.form
+            assert "time" in request.form
+            assert "date" in request.form
+
+            # now = datetime.datetime.now()
+            # start = datetime.datetime(2018, 9, 3, 0, 0, 0, 000000)
+            # diff = (now - start).days * 24 * 60 * 60 + (now - start).seconds
+            # week = int(diff / (7 * 24 * 60 * 60)) + 1
+            # sunday=(int(diff%(7*24*60*60)/(24*60*60)))+1
+            # hour=int(((diff%(7*24*60*60)%(24*60*60)))/(60*60))
+            # minute=int((((diff%(7*24*60*60)%(24*60*60)))%(60*60))/60)-4
+
+            if "classroom" in request.form and "sunday" in request.form and "time" in request.form:
+                classroom = request.form['classroom']
+                sunday = request.form['sunday']
+                time = request.form['time']
+                date = request.form['date']
+                rooms = mongo.db.course.find_one({"classroom": str(classroom), "sunday": str(sunday), "time": str(time),"date":date})
+                if rooms==None:
+                    use = mongo.db.using.find_one({"classroom": str(classroom), "sunday": str(sunday), "time": str(time), "date": date,"user":str(currentuser)})
+                    if use==None:
+                        return jsonify({"msg":"keyiyuding"})
+                    else:
+                        return jsonify({"msg":"yijingyuding"})
+                else:
+                    return jsonify({"msg":"youke"})
+            else:
+                return jsonify({"error": "1", "msg": "Information should be completed"})
+        else:
+            return jsonify({"error": "please login in first"})
+    elif(request.method=="GET"):
+        return render_template("find.html")
 
 
 if __name__ == '__main__':

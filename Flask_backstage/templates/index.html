@@ -1,11 +1,70 @@
 {% extends "base.html" %}
-
+{% block stylesheet %}
+    <link rel="stylesheet" href="../static/css/nav.css">
+    <link rel="stylesheet" href="../static/css/index.css">
+{% endblock %}
+{% block title %}主页{% endblock %}
 {% block body %}
-    {% for roomname,status in roomstatsitems %}
-        <div>
-        {{ roomname }}
-        :
-        {{ status }}
-        </div>
-    {% endfor %}
+{#    {% for roomname,status in roomstatsitems %}#}
+{#        <div>#}
+{#        {{ roomname }}#}
+{#        :#}
+{#        {{ status }}#}
+{#        </div>#}
+{#    {% endfor %}#}
+    <div style="height: 50px;background-color: #ccc">
+<div class="nav">
+    <a href="#">首页</a>
+    <a href="#"></a>
+    <a href="/reservation">预定教室</a>
+    <a href="/find">查询</a>
+
+</div></div>
+
+    <div class="main">
+        <div class="box">
+        {% for roomname,status in roomstatsitems  %}
+            <div class="container">
+                <div class="center"><a href="#"><span style="color: black">{{ roomname }}</span><br><b>状态：</b><span>{{ status }}</span></a></div>
+            </div>
+        {% endfor %}
+        </div>>
+    </div>
+{#                <a href="#"><b>电二</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>电三</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>电五</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>电六</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>电七</b><br/>状态：<h>未预定</h></a>#}
+{#            </div>#}
+{#            <div class="box" id="jj">#}
+{#                <p>旧教</p>#}
+{#                <a href="#"><b>{{ roomname }}</b><br/>状态：<h>{{ status }}</h></a>#}
+{#                <a href="#"><b>105</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>108</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>111</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>201</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>202</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>204</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>205</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>208</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>301</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>302</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>304</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>305</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>308</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>310</b><br/>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>312</b><br/>状态：<h>未预定</h></a>#}
+{#            </div>#}
+{#            <div class="box" id="xp">#}
+{#                <p>新平</p>#}
+{#                <a href="#"><b>{{ roomname }}</b><br>状态：<h>{{ status }}</h></a>#}
+{#                <a href="#"><b>新平二</b><br>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>新平三</b><br>状态：<h>未预定</h></a>#}
+{#                <a href="#"><b>新平四</b><br>状态：<h>未预定</h></a>#}
+
+
+
+
+
+
 {% endblock %}

@@ -1,13 +1,99 @@
 {% extends "base.html" %}
+
+{% block title %}预约人信息{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="../static/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/identity.css">
+{% endblock %}
 {% block  body %}
 
-    <form action="/reservation" method="post">
-        教室: <input type="text" name="classroom"><br>
-        星期: <input type="text" name="sunday"><br>
-        第几节课: <input type="text" name="time"><br>
-        第几周: <input type="text" name="date"><br>
-        <button type="submit">预定</button>
-    </form>
+    <div class="identity_form container">
+		<form action="/reservation" method="post">
+{#		  <div class="form-group">#}
+{#		    <label for="exampleInputEmail1">姓名</label>#}
+{#		    <input type="text" class="form-control" id="NameInput" placeholder="请输入姓名" required="required" name="name">#}
+{#		  </div>#}
+{#		  <div class="form-group">#}
+{#		    <label for="exampleInputEmail1">电话</label>#}
+{#		    <input type="tel" class="form-control" id="TelephoneInput" placeholder="请输入手机号" required="required" name="phone">#}
+{#		  </div>#}
+		  <div class="form-group">
+		    <label for="exampleInputEmail1">教室</label>
+		    <input type="text" class="form-control" id="YongInput" placeholder="教室" required="required" name="classroom">
+		  </div>
+{#		  <div class="form-group">#}
+{#		    <label for="exampleInputEmail1">班级信息</label>#}
+{#		    <input type="text" class="form-control" id="ClassInput" placeholder="信工1601" required="required" name="classinfo">#}
+{#		  </div>#}
+          <div class="form-group">
+		    <label for="exampleInputEmail1">第几周</label>
+		    <input type="text" class="form-control" id="YongInput" placeholder="第几周" required="required" name="date">
+		  </div>
+            <div class="form-group">
+		    <label for="exampleInputEmail1">星期</label>
+		    <input type="text" class="form-control" id="YongInput" placeholder="星期几" required="required" name="sunday">
+		  </div>
+		  <div class="form-group select-section">
+		  <div class="dropdown">
+			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" name="time">
+			    使用时间
 
+			  </button>
+			  <i class="glyphicon glyphicon-plus-sign more"></i>
+			  <ul class="dropdown-menu dropdownmenu1" aria-labelledby="dropdownMenu1">
+			    <li><a>第一节</a></li>
+			    <li><a>第二节</a></li>
+			    <li><a>第三节</a></li>
+			    <li><a>第四节</a></li>
+			    <li roator class="divider"></li>
+			    <li><a>第五节</a></li>
+			    <li><a>第六节</a></li>
+			    <li><a>第七节</a></li>
+			    <li><a>第八节</a></li>
+			    <li roator class="divider"></li>
+			    <li><a>第九节</a></li>
+			    <li><a>第十节</a></li>
+			    <li><a>第十一节</a></li>
+			    <li><a>第十二节</a></li>
+			  </ul>
+		  </div>
+			<div class="dropdown section2">
+			<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+			    使用时间
 
+			  </button>
+			  <ul class="dropdown-menu dropdownmenu2" aria-labelledby="dropdownMenu2">
+			    <li><a>第一节</a></li>
+			    <li><a>第二节</a></li>
+			    <li><a>第三节</a></li>
+			    <li><a>第四节</a></li>
+			    <li roator class="divider"></li>
+			    <li><a>第五节</a></li>
+			    <li><a>第六节</a></li>
+			    <li><a>第七节</a></li>
+			    <li><a>第八节</a></li>
+			    <li roator class="divider"></li>
+			    <li><a>第九节</a></li>
+			    <li><a>第十节</a></li>
+			    <li><a>第十一节</a></li>
+			    <li><a>第十二节</a></li>
+			  </ul>
+		  </div>
+		  </div>
+		    <button type="submit" class="btn btn-primary">提交预约</button>
+            <span style="height: 38px;width: 90px" class="btn btn-primary">
+            <a href="/" style="color: white">返回主页</a>
+            </span>
+            <span style="height: 38px;width: 90px" class="btn btn-primary">
+            <a href="/cancel" style="color: white">取消预定</a>
+            </span>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block end %}
+    <script src="../static/lib/jquery/jquery.js"></script>
+	<script src="../static/js/identity.js"></script>
+	<script src="../static/lib/bootstrap/js/bootstrap.js"></script>
 {% endblock %}

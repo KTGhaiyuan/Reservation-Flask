@@ -2,11 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="shortcut icon" href="{{ url_for("static",filename="img/book.png") }}">
+    <link rel="shortcut icon" href="{{ url_for("static",filename="img/logo1.ico") }}">
+    <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
     {% include "global/bootstrap.html" %}
-    {% block stylesheet %} {% endblock %}
+    {% block stylesheet %}
+
+    {% endblock %}
     <title>{% block title %}{% endblock %}</title>
     {% block  head %}{% endblock %}
+    {% block script %}{% endblock %}
 </head>
 <body>
 {% block flashmsg %}
@@ -30,4 +36,6 @@
 {% block  body %}
 {% endblock %}
 </body>
+{% block end %}
+{% endblock %}
 </html>

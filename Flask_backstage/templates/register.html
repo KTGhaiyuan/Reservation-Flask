@@ -1,18 +1,69 @@
 {% extends "base.html" %}
-
+{% block title %}注册{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="../static/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/find.css">
+{% endblock %}
 {% block  body %}
 
-    <form action="/register" method="post">
+{#    <form action="/register" method="post">#}
+{##}
+{##}
+{#    姓名: <input type="text" name="actual_name"><br>#}
+{#    ID : <input type="text" name="username"><br>#}
+{#    密码 : <input type="password" name="password"><br>#}
+{#    重复密码 : <input type="text" name="repeat_password"><br>#}
+{#    身份:<input type="text" name="identity"><br>#}
+{##}
+{#        <button type="submit">提交</button>#}
+{#</form>#}
+
+    <form action='/register' method="post">
+        <div class="identity_form container">
+		  <div class="form-group">
+		    <label for="exampleInputEmail1">姓名</label>
+		    <input type="text" class="form-control" id="className" placeholder="张XXX" required="required" name="actual_name">
+		  </div>
+            <div class="form-group">
+		    <label for="exampleInputEmail1">用户名</label>
+		    <input type="text" class="form-control"  placeholder="zhang" required="required" name="username">
+		  </div>
+            <div class="form-group">
+		    <label for="exampleInputEmail1">密码</label>
+		    <input type="password" class="form-control"  placeholder="" required="required" name="password">
+		  </div>
+            <div class="form-group">
+		    <label for="exampleInputEmail1">重复密码</label>
+		    <input type="password" class="form-control" placeholder="" required="required" name="repeat_password">
+		  </div>
+            <div class="form-group">
+		    <label for="exampleInputEmail1">身份</label>
+		    <input type="text" class="form-control" placeholder="老师 学生会主席 ...." required="required" name="identity">
+		  </div>
+{#		  <div class="form-group">#}
+{#		    <label for="exampleInputEmail1">查询日期</label>#}
+{#		    <input type="date" class="form-control" id="date" required="required">#}
+{#		  </div>#}
+		  <button class="btn btn-primary" type="submit">注册</button>
+{#		  <button type="button" class="btn btn-warning" style="display: none;" disabled="disabled">不可预约</button>#}
+{#		  <button type="submit" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-sm" style="display: none;">可预约，立即预约</button>#}
+{#		  <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" >#}
+{#		    <div class="modal-dialog modal-sm" role="document">#}
+{#		      <div class="modal-content">#}
+{#		        预约成功！#}
+{#		      </div>#}
+{#		    </div>#}
+{#		  </div>#}
+
+        </div>
+        </form>
 
 
-    姓名: <input type="text" name="actual_name"><br>
-    ID : <input type="text" name="username"><br>
-    密码 : <input type="password" name="password"><br>
-    重复密码 : <input type="text" name="repeat_password"><br>
-    身份:<input type="text" name="identity"><br>
-
-        <button type="submit">提交</button>
-</form>
 
 
+{% endblock %}
+{% block end %}
+    <script src="../static/lib/jquery/jquery.js"></script>
+	<script src="../static/js/identity.js"></script>
+	<script src="../static/lib/bootstrap/js/bootstrap.js"></script>
 {% endblock %}
