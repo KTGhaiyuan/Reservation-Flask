@@ -7,12 +7,17 @@
     <script>
         $(document).ready(function () {
             $("#quxiao").click(function () {
+
+                var timelist=[]
+                for (i=1;i<=id;i++){
+                    timelist[i-1]=$("#" + "time" + i + "select").val()
+                }
                 $.post("/cancel",
                     {
                         classroom: $('#YongInput1').val(),
                         sunday: $('#YongInput3').val(),
                         date: $('#YongInput2').val(),
-                        time: $('#dropdownMenu1').val()
+                        "time[]": timelist
                     }
                 );
             });
@@ -53,19 +58,19 @@
 
             <select class="custom-select custom-select-md " id="time1select" name="time1select"
                     style="width: 150px;">
-                <option selected>使用时间</option>
-                <option value="第一节">第一节</option>
-                <option value="第二节">第二节</option>
-                <option value="第三节">第三节</option>
-                <option value="第四节">第四节</option>
-                <option value="第五节">第五节</option>
-                <option value="第六节">第六节</option>
-                <option value="第七节">第七节</option>
-                <option value="第八节">第八节</option>
-                <option value="第九节">第九节</option>
-                <option value="第十节">第十节</option>
-                <option value="第十一节">第十一节</option>
-                <option value="第十二节">第十二节</option>
+                <option value="none" selected>使用时间</option>
+                <option value="一">第一节</option>
+                <option value="二">第二节</option>
+                <option value="三">第三节</option>
+                <option value="四">第四节</option>
+                <option value="五">第五节</option>
+                <option value="六">第六节</option>
+                <option value="七">第七节</option>
+                <option value="八">第八节</option>
+                <option value="九">第九节</option>
+                <option value="十">第十节</option>
+                <option value="十一">第十一节</option>
+                <option value="十二">第十二节</option>
             </select>
 
             <button id="addtime" class="btn btn-primary ">+</button>
@@ -77,24 +82,26 @@
                     var prev = "time" + id + "select";
                     id++;
                     nexthtml = '           <select class="custom-select custom-select-md " id="time' + id + 'select" name="time' + id + 'select" style="width: 150px;>\n' +
-                        '                <option selected>使用时间</option>\n' +
-                        '                <option value="第一节">第一节</option>\n' +
-                        '                <option value="第二节">第二节</option>\n' +
-                        '                <option value="第三节">第三节</option>\n' +
-                        '                <option value="第四节">第四节</option>\n' +
-                        '                <option value="第五节">第五节</option>\n' +
-                        '                <option value="第六节">第六节</option>\n' +
-                        '                <option value="第七节">第七节</option>\n' +
-                        '                <option value="第八节">第八节</option>\n' +
-                        '                <option value="第九节">第九节</option>\n' +
-                        '                <option value="第十节">第十节</option>\n' +
-                        '                <option value="第十一节">第十一节</option>\n' +
-                        '                <option value="第十二节">第十二节</option>\n' +
+                        '                <option value="none" selected>使用时间</option>\n' +
+                        '                <option value="none" selected>使用时间</option>\n' +
+                        '                <option value="一">第一节</option>\n' +
+                        '                <option value="二">第二节</option>\n' +
+                        '                <option value="三">第三节</option>\n' +
+                        '                <option value="四">第四节</option>\n' +
+                        '                <option value="五">第五节</option>\n' +
+                        '                <option value="六">第六节</option>\n' +
+                        '                <option value="七">第七节</option>\n' +
+                        '                <option value="八">第八节</option>\n' +
+                        '                <option value="九">第九节</option>\n' +
+                        '                <option value="十">第十节</option>\n' +
+                        '                <option value="十一">第十一节</option>\n' +
+                        '                <option value="十二">第十二节</option>\n' +
                         '            </select>'
-                    console.log(nexthtml)
 
                     $("#" + prev).after(nexthtml)
                 })
+
+
 
 
             </script>
@@ -102,7 +109,7 @@
             <br>
             <br>
             <button type="submit" class="btn btn-primary">提交预约</button>
-            <a href="/cancel" style="color: white" class="btn btn-primary">取消预约</a>
+            <button href="/cancel" style="color: white" class="btn btn-primary" id="quxiao">取消预约</button>
             <a href="/" style="color: white" id="quxiao" class="btn-primary btn">返回主页</a>
         </form>
     </div>

@@ -219,7 +219,7 @@ def invalid_token_loaderr(a):
     return redirect(url_for("login"))
 
 
-@app.route('/cancel')
+@app.route('/cancel',methods=["GET","POST"])
 @jwt_required
 def cancel():
     if(request.method=="POST"):
