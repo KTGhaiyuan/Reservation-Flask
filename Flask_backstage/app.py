@@ -221,6 +221,7 @@ def invalid_token_loaderr(a):
 @app.route('/cancel',methods=["GET","POST"])
 @jwt_required
 def cancel():
+
     if(request.method=="POST"):
         assert "classroom" in request.form
         assert "sunday" in request.form
@@ -232,6 +233,17 @@ def cancel():
             sunday = request.form['sunday']
             time = request.form['time']
             date = request.form['date']
+
+            timetemp=time[1:-2].replace('"',"").split(",")
+            time=[]
+            for i in timetemp:
+                if(i in ["一","二","三","四","五","六","七","八","九","十","十一","十二"] and i not in time):
+                    time.append(i)
+
+            #TODO 添加循环time
+
+
+
             if (currentuser):
                 try:
                     mongo.db.using.remove({"classroom": str(classroom), "sunday": str(sunday), "time": str(time), "date": date, 'user': str(currentuser)})
