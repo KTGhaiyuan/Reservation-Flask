@@ -95,7 +95,7 @@ def register():
                 if ("json" in request.headers and request.headers["json"] == "1"):
                     return jsonify({"error": "1", "errmsg": "Unknow error"})
                 else:
-                    flash("注册失败", "danger")
+                    flash("已经注册,去登陆", "danger")
                     return redirect(url_for("register"))
 
 
@@ -111,7 +111,7 @@ def login():
     if "username" in request.form and "password" in request.form:
         username = request.form["username"]
         password = request.form["password"]
-        user = mongo.db.user.find_one({"username": username, "password": password})
+        user = mongo.db.user.find_one({"username": str(username), "password": str(password)})
 
         if (user == None):
             if ("json" in request.headers and request.headers["json"] == "1"):
@@ -126,11 +126,9 @@ def login():
             if ("json" in request.headers and request.headers["json"] == "1"):
                 return jsonify({"error": 0, "access_token": access_token})
             else:
-
-                resp=redirect(url_for("index"))
-                resp.set_cookie("access_token_cookie",access_token)
+                resp = redirect(url_for("index"))
+                resp.set_cookie("access_token_cookie", access_token)
                 return resp
-
 
 @app.route("/testprotected", methods=["GET"])
 @jwt_required
@@ -199,20 +197,26 @@ def index():
         time = utils.numtozh(utils.hourtonlessons(hour))
         roomstats = {}
         for i in allroom:
-            yes = mongo.db.course.find_one(
+            yes = mongo.db.course_new.find_one(
                 {"classroom": str(i), "sunday": str(week), "time": str(time), "date": dijizhou})
             yuding = mongo.db.using.find_one(
-                {"classroom": str(i), "sunday": str(week), "time": str(time), "date": str(dijizhou)})
+                {"classroom": str(i), "sunday": str(week), "time": str(time), "date": dijizhou})
             if (yes != None):
                 roomstats[i] = "youke"
             elif (yuding != None):
-                roomstats[i] = "yuding"
+                roomstats[i] = "yijingyuding"
             else:
                 roomstats[i] = "keyuding"
 
-        return render_template("index.html", roomstatsitems=roomstats.items())
+        return render_template("index.html", roomstatsitems=roomstats.items(),currentuser=currentuser)
     else:
         return redirect(url_for("login"))
+
+
+@jwt.unauthorized_loader
+def invalid_token_loaderr(a):
+    flash("请先登陆")
+    return redirect(url_for("login"))
 
 
 @app.route('/cancel')
@@ -233,13 +237,11 @@ def cancel():
                 try:
                     mongo.db.using.remove({"classroom": str(classroom), "sunday": str(sunday), "time": str(time), "date": date, 'user': str(currentuser)})
                     flash("取消成功!")
-                    return redirect(url_for('/'))
+                    return redirect(url_for('/reservation'))
                 except:
                     return jsonify({"error": "Please submit the correct room"})
         else:
             return jsonify({"error": "please login in first"})
-    # elif(request.method=='GET'):
-    #     return render_template('')
 
 @app.route('/find', methods=['POST', 'GET'])
 @jwt_required
@@ -265,7 +267,8 @@ def find():
                 sunday = request.form['sunday']
                 time = request.form['time']
                 date = request.form['date']
-                rooms = mongo.db.course.find_one({"classroom": str(classroom), "sunday": str(sunday), "time": str(time),"date":date})
+                rooms = mongo.db.course_new.find_one({"classroom": str(classroom), "sunday": str(sunday), "time": str(time),"date":int(date)})
+                print(rooms)
                 if rooms==None:
                     use = mongo.db.using.find_one({"classroom": str(classroom), "sunday": str(sunday), "time": str(time), "date": date,"user":str(currentuser)})
                     if use==None:

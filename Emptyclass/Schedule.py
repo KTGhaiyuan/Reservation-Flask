@@ -3,15 +3,8 @@ from  bs4  import BeautifulSoup
 import re
 import pymongo
 
-# headers={
-#         'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36',
-#         'Cookie':'UM_distinctid=16648846caf80f-022df8bb40b3da-8383268-144000-16648846cb0153; JSESSIONID=adehQz6UcMFXO6ZhYyIzw',
-#         'Host':'urp.hebau.edu.cn:9001'
-# }
-
 
 def get_scheule(url):
-    # res=requests.get(url)
     soup=BeautifulSoup(url,'lxml')
     #print(soup)
     courss=soup.find_all('tr',class_='odd')
@@ -27,7 +20,7 @@ def get_scheule(url):
             date_day = cours.find_all('td')[0].string.strip()
         else:
             room['classroom'] = cours.find_all('td')[17].string.strip()
-            room['sunday'] = cours.find_all('td')[14].string.strip()
+            room['sunday'] = cours.find_all('td')[12].string.strip()
             room['time'] = cours.find_all('td')[13].string.strip()
             date_day = cours.find_all('td')[11].string.strip()
 
@@ -74,7 +67,7 @@ if __name__=='__main__':
     # url='http://urp.hebau.edu.cn:9001/xkAction.do?actionType=6'
     client = pymongo.MongoClient('localhost', 27017)
     schedules = client['reservation']
-    rooms = schedules['course']
+    rooms = schedules['course_new']
     for i in range(1, 20):
         with  open('class/学生选课结果{}.html'.format(i), 'r')  as  f:
             f = f.read()

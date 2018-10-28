@@ -5,6 +5,23 @@
     <link rel="stylesheet" href="../static/lib/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../static/css/identity.css">
 {% endblock %}
+{% block script %}
+    <script src="../static/lib/jquery/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#quxiao").click(function () {
+                $.post("/cancel",
+                    {
+                        classroom:$('#YongInput1').val(),
+                        sunday:$('#YongInput3').val(),
+                        date:$('#YongInput2').val(),
+                        time:$('#dropdownMenu1').val()
+                    }
+                );
+            });
+        });
+    </script>
+{% endblock %}
 {% block  body %}
 
     <div class="identity_form container">
@@ -19,7 +36,7 @@
 {#		  </div>#}
 		  <div class="form-group">
 		    <label for="exampleInputEmail1">教室</label>
-		    <input type="text" class="form-control" id="YongInput" placeholder="教室" required="required" name="classroom">
+		    <input type="text" class="form-control" id="YongInput1" placeholder="教室" required="required" name="classroom">
 		  </div>
 {#		  <div class="form-group">#}
 {#		    <label for="exampleInputEmail1">班级信息</label>#}
@@ -27,11 +44,11 @@
 {#		  </div>#}
           <div class="form-group">
 		    <label for="exampleInputEmail1">第几周</label>
-		    <input type="text" class="form-control" id="YongInput" placeholder="第几周" required="required" name="date">
+		    <input type="text" class="form-control" id="YongInput2" placeholder="第几周" required="required" name="date">
 		  </div>
             <div class="form-group">
 		    <label for="exampleInputEmail1">星期</label>
-		    <input type="text" class="form-control" id="YongInput" placeholder="星期几" required="required" name="sunday">
+		    <input type="text" class="form-control" id="YongInput3" placeholder="星期几" required="required" name="sunday">
 		  </div>
 		  <div class="form-group select-section">
 		  <div class="dropdown">
@@ -81,12 +98,8 @@
 		  </div>
 		  </div>
 		    <button type="submit" class="btn btn-primary">提交预约</button>
-            <span style="height: 38px;width: 90px" class="btn btn-primary">
-            <a href="/" style="color: white">返回主页</a>
-            </span>
-            <span style="height: 38px;width: 90px" class="btn btn-primary">
-            <a href="/cancel" style="color: white">取消预定</a>
-            </span>
+            <a href="/cancel" style="color: white" class="btn btn-primary">取消预约</a>
+            <a href="/" style="color: white"  id="quxiao" class="btn-primary btn">返回主页</a>
         </form>
     </div>
 
