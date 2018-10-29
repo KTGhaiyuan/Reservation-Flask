@@ -1,48 +1,96 @@
 {% extends 'base.html' %}
 {% block title %}查找{% endblock %}
 {% block stylesheet %}
-    <link rel="stylesheet" href="../static/lib/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="../static/css/find.css">
 {% endblock %}
+{% block script %}
 
+    <script>
+        $(document).ready(function () {
+
+            $("#chaxun").click(function () {
+
+                var timelist = []
+                for (i = 1; i <= id; i++) {
+                    timelist[i - 1] = $("#" + "time" + i + "select").val()
+                }
+
+                $.post("/find",
+                    {
+                        classroom: $('#YongInput1').val(),
+                        sunday: $('#YongInput3').val(),
+                        date: $('#YongInput2').val(),
+                        time: JSON.stringify(timelist)
+                    },
+                    function (data) {
+
+
+                        if (typeof data['msg'] == 'object') {
+
+                            b = data['msg']
+                            tempstr = ''
+                            tempstr = tempstr + "取消成功\n"
+
+                            for (i = 0; i < b.length; i++) {
+                                tempstr = tempstr + "room:" + b[i]["classroom"] + "第"+b[i]["time"]+'节\n'
+                                console.log(tempstr)
+                            }
+                            alert(tempstr)
+                        }
+                        else {
+                            alert(data['msg'])
+                        }
+                    });
+            });
+        });
+    </script>
+{% endblock %}
 {% block body %}
 
-    <form action='/find' method="post">
+{#    <form action='/find' method="post">#}
         <div class="identity_form container">
 		  <div class="form-group">
 		    <label for="exampleInputEmail1">教室名称</label>
-		    <input type="text" class="form-control" id="className" placeholder="新平三/旧教101/电六" required="required" name="classroom">
+		    <input type="text" class="form-control" id="className" placeholder="新平三/旧教101/电六" required="required" id="#YongInput1" name="classroom">
 		  </div>
             <div class="form-group">
 		    <label for="exampleInputEmail1">星期</label>
-		    <input type="text" class="form-control"  placeholder="星期xxx" required="required" name="sunday">
+		    <input type="text" class="form-control" id="YongInput3"  placeholder="星期xxx" required="required" name="sunday">
 		  </div>
-            <div class="form-group">
-		    <label for="exampleInputEmail1">第几节课</label>
-		    <input type="text" class="form-control"  placeholder="第xxx周" required="required" name="time">
-		  </div>
-            <div class="form-group">
-		    <label for="exampleInputEmail1">第几周</label>
-		    <input type="text" class="form-control" placeholder="第xxx周" required="required" name="date">
-		  </div>
-{#		  <div class="form-group">#}
-{#		    <label for="exampleInputEmail1">查询日期</label>#}
-{#		    <input type="date" class="form-control" id="date" required="required">#}
-{#		  </div>#}
-		  <button class="btn btn-primary" type="submit">查询</button>
-            <a href="/" class=" btn btn-primary">返回主页</a>
-{#		  <button type="button" class="btn btn-warning" style="display: none;" disabled="disabled">不可预约</button>#}
-{#		  <button type="submit" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-sm" style="display: none;">可预约，立即预约</button>#}
-{#		  <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" >#}
-{#		    <div class="modal-dialog modal-sm" role="document">#}
-{#		      <div class="modal-content">#}
-{#		        预约成功！#}
-{#		      </div>#}
-{#		    </div>#}
+{#            <div class="form-group">#}
+{#		    <label for="exampleInputEmail1">第几节课</label>#}
+{#		    <input type="text" class="form-control"  placeholder="第xxx周" required="required" name="time">#}
 {#		  </div>#}
 
+            <div class="form-group" style="margin-bottom: 30px">
+		    <label for="exampleInputEmail1">第几周</label>
+		    <input type="text" class="form-control" id="YongInput2" placeholder="第xxx周" required="required" name="date">
+		  </div>
+
+             <select class="custom-select custom-select-md mb-3" id="time1select" name="time"
+                    style="width: 360px;">
+                <option value="none" selected>使用时间</option>
+                <option value="一">第一节</option>
+                <option value="二">第二节</option>
+                <option value="三">第三节</option>
+                <option value="四">第四节</option>
+                <option value="五">第五节</option>
+                <option value="六">第六节</option>
+                <option value="七">第七节</option>
+                <option value="八">第八节</option>
+                <option value="九">第九节</option>
+                <option value="十">第十节</option>
+                <option value="十一">第十一节</option>
+                <option value="十二">第十二节</option>
+            </select>
+
+
+		  <button class="btn btn-primary" id="chaxun">查询</button>
+            <a href="/" class=" btn btn-primary">返回主页</a>
+
+
         </div>
-        </form>
+{#        </form>#}
 {% endblock %}
 
 

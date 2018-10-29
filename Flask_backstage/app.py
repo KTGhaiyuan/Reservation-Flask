@@ -186,9 +186,10 @@ def reservation():
                         status+=1
                         reservation_status.append({"classroom": classroom, "sunday": sunday, "time": str(i), "date": date})
                 if(status==0):
-                    return jsonify({"msg":"yijingyuding"})
+                    return jsonify({"msg":"已经预定"})
                 else:
                     return jsonify({"msg": reservation_status})
+                    # return jsonify({"msg": "预定成功!"})
 
 
             else:
@@ -269,9 +270,9 @@ def cancel():
                         status += 1
                         reservation_status.append({"classroom": str(classroom), "sunday": str(sunday), "time": str(i), "date": date})
                 if (status == 0):
-                    return jsonify({"msg": "meiyouding"})
+                    return jsonify({"msg": "没有预定,不能取消!"})
                 else:
-                    return jsonify({"msg": reservation_status})
+                    return jsonify({"msg": "取消成功!"})
             except:
                 return jsonify({"error": "Please submit the correct room"})
 

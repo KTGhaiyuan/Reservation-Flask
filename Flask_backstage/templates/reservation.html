@@ -20,8 +20,28 @@
                         sunday: $('#YongInput3').val(),
                         date: $('#YongInput2').val(),
                         time: JSON.stringify(timelist)
-                    }
-                );
+                    },
+                    function (data) {
+
+
+                        if (typeof data['msg'] == 'object') {
+
+                            b = data['msg']
+                            tempstr = ''
+                            tempstr = tempstr + "取消成功\n"
+
+                            for (i = 0; i < b.length; i++) {
+                                tempstr = tempstr + "room:" + b[i]["classroom"] + "第"+b[i]["time"]+'节\n'
+                                console.log(tempstr)
+                            }
+                            alert(tempstr)
+                        }
+                        else {
+                            alert(data['msg'])
+                        }
+
+
+                    });
             });
 
             $("#yuding").click(function () {
@@ -37,8 +57,28 @@
                         sunday: $('#YongInput3').val(),
                         date: $('#YongInput2').val(),
                         time: JSON.stringify(timelist)
-                    }
-                );
+                    },
+                    function (data) {
+
+
+                        if (typeof data['msg'] == 'object') {
+
+                            b = data['msg']
+                            tempstr = ''
+                            tempstr = tempstr + "预定成功\n"
+
+                            for (i = 0; i < b.length; i++) {
+                                tempstr = tempstr + "room:" + b[i]["classroom"] + "第"+b[i]["time"]+'节\n'
+                                console.log(tempstr)
+                            }
+                            alert(tempstr)
+                        }
+                        else {
+                            alert(data['msg'])
+                        }
+
+
+                    });
             });
 
 
@@ -53,74 +93,74 @@
     <div class="identity_form container">
         <div style="width: 330px;height:400px;background: white;margin: 90px auto;padding-left: 21px;padding-top: 19px;border-radius: 10px;border: 1px">
 
-                <div class="form-group">
-                    <label for="exampleInputEmail1">教室</label>
-                    <input type="text" class="form-control" id="YongInput1" placeholder="教室" required="required"
-                           style="width: 290px" name="classroom">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">第几周</label>
-                    <input type="text" class="form-control" id="YongInput2" placeholder="第几周" required="required"
-                           style="width: 290px"
-                           name="date">
-                </div>
-                <div class="form-group">
-                    <label for="exampleInputEmail1">星期</label>
-                    <input type="text" class="form-control" id="YongInput3" placeholder="星期几" required="required"
-                           style="width: 290px"
-                           name="sunday">
-                </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">教室</label>
+                <input type="text" class="form-control" id="YongInput1" placeholder="教室" required="required"
+                       style="width: 290px" name="classroom">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1"> 第几周</label>
+                <input type="text" class="form-control" id="YongInput2" placeholder="第几周" required="required"
+                       style="width: 290px"
+                       name="date">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1"> 星期</label>
+                <input type="text" class="form-control" id="YongInput3" placeholder="星期几" required="required"
+                       style="width: 290px"
+                       name="sunday">
+            </div>
 
-                <select class="custom-select custom-select-md mb-1" id="time1select" name="time"
-                        style="width: 143px;">
-                    <option value="none" selected>使用时间</option>
-                    <option value="一">第一节</option>
-                    <option value="二">第二节</option>
-                    <option value="三">第三节</option>
-                    <option value="四">第四节</option>
-                    <option value="五">第五节</option>
-                    <option value="六">第六节</option>
-                    <option value="七">第七节</option>
-                    <option value="八">第八节</option>
-                    <option value="九">第九节</option>
-                    <option value="十">第十节</option>
-                    <option value="十一">第十一节</option>
-                    <option value="十二">第十二节</option>
-                </select>
+            <select class="custom-select custom-select-md mb-1" id="time1select" name="time"
+                    style="width: 143px;">
+                <option value="none" selected>使用时间</option>
+                <option value="一">第一节</option>
+                <option value="二">第二节</option>
+                <option value="三">第三节</option>
+                <option value="四">第四节</option>
+                <option value="五">第五节</option>
+                <option value="六">第六节</option>
+                <option value="七">第七节</option>
+                <option value="八">第八节</option>
+                <option value="九">第九节</option>
+                <option value="十">第十节</option>
+                <option value="十一">第十一节</option>
+                <option value="十二">第十二节</option>
+            </select>
 
-                <button id="addtime" class="btn btn-primary btn-sm mb-1 " style="border-radius: 0.1rem">+</button>
-                <script>
-                    var id = 1;
+            <button id="addtime" class="btn btn-primary btn-sm mb-1 " style="border-radius: 0.1rem">+</button>
+            <script>
+                var id = 1;
 
-                    $("#addtime").on("click", function () {
+                $("#addtime").on("click", function () {
 
-                        var prev = "time" + id + "select";
-                        id++;
-                        nexthtml = '           <select class="custom-select custom-select-md mb-1" id="time' + id + 'select" name="time" style="width: 143px;>\n' +
-                            '                <option value="none" selected>使用时间</option>\n' +
-                            '                <option value="none">使用时间</option>\n' +
-                            '                <option value="一">第一节</option>\n' +
-                            '                <option value="二">第二节</option>\n' +
-                            '                <option value="三">第三节</option>\n' +
-                            '                <option value="四">第四节</option>\n' +
-                            '                <option value="五">第五节</option>\n' +
-                            '                <option value="六">第六节</option>\n' +
-                            '                <option value="七">第七节</option>\n' +
-                            '                <option value="八">第八节</option>\n' +
-                            '                <option value="九">第九节</option>\n' +
-                            '                <option value="十">第十节</option>\n' +
-                            '                <option value="十一">第十一节</option>\n' +
-                            '                <option value="十二">第十二节</option>\n' +
-                            '            </select>'
+                    var prev = "time" + id + "select";
+                    id++;
+                    nexthtml = '           <select class="custom-select custom-select-md mb-1" id="time' + id + 'select" name="time" style="width: 143px;>\n' +
+                        '                <option value="none" selected>使用时间</option>\n' +
+                        '                <option value="none">使用时间</option>\n' +
+                        '                <option value="一">第一节</option>\n' +
+                        '                <option value="二">第二节</option>\n' +
+                        '                <option value="三">第三节</option>\n' +
+                        '                <option value="四">第四节</option>\n' +
+                        '                <option value="五">第五节</option>\n' +
+                        '                <option value="六">第六节</option>\n' +
+                        '                <option value="七">第七节</option>\n' +
+                        '                <option value="八">第八节</option>\n' +
+                        '                <option value="九">第九节</option>\n' +
+                        '                <option value="十">第十节</option>\n' +
+                        '                <option value="十一">第十一节</option>\n' +
+                        '                <option value="十二">第十二节</option>\n' +
+                        '            </select>'
 
-                        $("#" + prev).after(nexthtml)
-                    })
+                    $("#" + prev).after(nexthtml)
+                })
 
 
-                </script>
+            </script>
 
-                <br>
-                <br>
+            <br>
+            <br>
 
 
             <button class="btn btn-primary" id="yuding">提交预约</button>
