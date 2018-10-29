@@ -24,17 +24,24 @@
                 );
             });
 
+            $("#yuding").click(function () {
 
-            $('#yuding').click(function () {
+                var timelist = []
+                for (i = 1; i <= id; i++) {
+                    timelist[i - 1] = $("#" + "time" + i + "select").val()
+                }
+
                 $.post("/reservation",
                     {
                         classroom: $('#YongInput1').val(),
                         sunday: $('#YongInput3').val(),
                         date: $('#YongInput2').val(),
-                        time: 一
+                        time: JSON.stringify(timelist)
                     }
                 );
             });
+
+
         });
     </script>
 {% endblock %}
@@ -45,7 +52,6 @@
 
     <div class="identity_form container">
         <div style="width: 330px;height:400px;background: white;margin: 90px auto;padding-left: 21px;padding-top: 19px;border-radius: 10px;border: 1px">
-            <form action="/reservation" method="post">
 
                 <div class="form-group">
                     <label for="exampleInputEmail1">教室</label>
@@ -65,7 +71,7 @@
                            name="sunday">
                 </div>
 
-                <select class="custom-select custom-select-md mb-1" id="time1select" name="time1select"
+                <select class="custom-select custom-select-md mb-1" id="time1select" name="time"
                         style="width: 143px;">
                     <option value="none" selected>使用时间</option>
                     <option value="一">第一节</option>
@@ -90,9 +96,9 @@
 
                         var prev = "time" + id + "select";
                         id++;
-                        nexthtml = '           <select class="custom-select custom-select-md mb-1" id="time' + id + 'select" name="time' + id + 'select" style="width: 143px;>\n' +
+                        nexthtml = '           <select class="custom-select custom-select-md mb-1" id="time' + id + 'select" name="time" style="width: 143px;>\n' +
                             '                <option value="none" selected>使用时间</option>\n' +
-                            '                <option value="none" selected>使用时间</option>\n' +
+                            '                <option value="none">使用时间</option>\n' +
                             '                <option value="一">第一节</option>\n' +
                             '                <option value="二">第二节</option>\n' +
                             '                <option value="三">第三节</option>\n' +
@@ -115,10 +121,12 @@
 
                 <br>
                 <br>
-                <button type="submit" class="btn btn-primary" id="yuding">提交预约</button>
-                <button href="/cancel" style="color: white" class="btn btn-primary" id="quxiao">取消预约</button>
-                <a href="/" style="color: white" id="quxiao" class="btn-primary btn">返回主页</a>
-            </form>
+
+
+            <button class="btn btn-primary" id="yuding">提交预约</button>
+            <button href="/cancel" style="color: white" class="btn btn-primary" id="quxiao">取消预约</button>
+            <a href="/" style="color: white" id="quxiao" class="btn-primary btn">返回主页</a>
+
         </div>
     </div>
 

@@ -151,7 +151,10 @@ def testoptional():
 @app.route('/reservation', methods=['POST','GET'])
 @jwt_required
 def reservation():
-    if(request.method=="POST"):
+    if (request.method == "GET"):
+        return render_template("reservation.html")
+
+    elif(request.method=="POST"):
         currentuser = get_jwt_identity()
         if (currentuser):
             assert "classroom" in request.form
@@ -164,13 +167,28 @@ def reservation():
                 sunday = request.form['sunday']
                 time = request.form['time']
                 date = request.form['date']
+                timetemp = time[1:-2].replace('"', "").split(",")
+                time = []
 
-                useroom = mongo.db.using.find_one({"classroom": classroom, "sunday": sunday, "time": time, "date": date})
-                if useroom != None:
-                    return jsonify({"error": 1, "msg": "Already scheduled"})
+                for i in timetemp:
+                    if (i in ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"] and i not in time):
+                        time.append(i)
+                reservation_status=[]
+                status=0
+                for i in time:
+                    useroom = mongo.db.using.find_one({"classroom": str(classroom), "sunday": str(sunday), "time": str(i), "date": str(date)})
+
+                    if useroom != None:
+                        status+=0
+                    else:
+                        mongo.db.using.insert(
+                            {"classroom": classroom, "sunday": sunday, "time": str(i), "date": date, 'user': currentuser})
+                        status+=1
+                        reservation_status.append({"classroom": classroom, "sunday": sunday, "time": str(i), "date": date})
+                if(status==0):
+                    return jsonify({"msg":"yijingyuding"})
                 else:
-                    mongo.db.using.insert({"classroom": classroom, "sunday": sunday, "time": time, "date": date, 'user': currentuser})
-                    return jsonify({"msg": "Reservation Successful!"})
+                    return jsonify({"msg": reservation_status})
 
 
             else:
@@ -178,8 +196,6 @@ def reservation():
 
         else:
             return jsonify({"error": "please log in first"})
-    elif(request.method=="GET"):
-        return render_template("reservation.html")
 
 @app.route("/",methods=['GET',"POST"])
 @jwt_required
@@ -197,10 +213,8 @@ def index():
         time = utils.numtozh(utils.hourtonlessons(hour))
         roomstats = {}
         for i in allroom:
-            yes = mongo.db.course_new.find_one(
-                {"classroom": str(i), "sunday": str(week), "time": str(time), "date": dijizhou})
-            yuding = mongo.db.using.find_one(
-                {"classroom": str(i), "sunday": str(week), "time": str(time), "date": dijizhou})
+            yes = mongo.db.course_new.find_one({"classroom": str(i), "sunday": str(week), "time": str(time), "date": dijizhou})
+            yuding = mongo.db.using.find_one({"classroom": str(i), "sunday": str(week), "time": str(time), "date": dijizhou})
             if (yes != None):
                 roomstats[i] = "youke"
             elif (yuding != None):
@@ -221,11 +235,11 @@ def invalid_token_loaderr(a):
 @app.route('/cancel',methods=["GET","POST"])
 @jwt_required
 def cancel():
-
+    a=request
     if(request.method=="POST"):
         assert "classroom" in request.form
         assert "sunday" in request.form
-        assert "time" in request.form
+        # assert "time" in request.form
         assert "date" in request.form
         currentuser = get_jwt_identity()
         if(currentuser):
@@ -241,16 +255,26 @@ def cancel():
                     time.append(i)
 
             #TODO 添加循环time
+            try:
+                reservation_status = []
+                status = 0
+                for i in time:
+                    useroom = mongo.db.using.find_one(
+                        {"classroom": str(classroom), "sunday": str(sunday), "time": str(i), "date": date})
+                    if useroom == None:
+                        status += 0
+                    else:
+                        mongo.db.using.remove(
+                            {"classroom": str(classroom), "sunday": str(sunday), "time": str(i), "date": date})
+                        status += 1
+                        reservation_status.append({"classroom": str(classroom), "sunday": str(sunday), "time": str(i), "date": date})
+                if (status == 0):
+                    return jsonify({"msg": "meiyouding"})
+                else:
+                    return jsonify({"msg": reservation_status})
+            except:
+                return jsonify({"error": "Please submit the correct room"})
 
-
-
-            if (currentuser):
-                try:
-                    mongo.db.using.remove({"classroom": str(classroom), "sunday": str(sunday), "time": str(time), "date": date, 'user': str(currentuser)})
-                    flash("取消成功!")
-                    return redirect(url_for('/reservation'))
-                except:
-                    return jsonify({"error": "Please submit the correct room"})
         else:
             return jsonify({"error": "please login in first"})
 
