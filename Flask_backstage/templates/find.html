@@ -9,33 +9,22 @@
         $(document).ready(function () {
 
             $("#chaxun").click(function () {
-
-                var timelist = []
-                for (i = 1; i <= id; i++) {
-                    timelist[i - 1] = $("#" + "time" + i + "select").val()
-                }
-
                 $.post("/find",
                     {
                         classroom: $('#YongInput1').val(),
                         sunday: $('#YongInput3').val(),
                         date: $('#YongInput2').val(),
-                        time: JSON.stringify(timelist)
+                        time: $('#time1select').val()
                     },
                     function (data) {
 
-
-                        if (typeof data['msg'] == 'object') {
-
-                            b = data['msg']
-                            tempstr = ''
-                            tempstr = tempstr + "取消成功\n"
-
-                            for (i = 0; i < b.length; i++) {
-                                tempstr = tempstr + "room:" + b[i]["classroom"] + "第"+b[i]["time"]+'节\n'
-                                console.log(tempstr)
-                            }
-                            alert(tempstr)
+                        if (data['msg'] == '可以预定') {
+                            alert(data['msg'])
+                            javascript:window.location.href='/reservation'
+                        }
+                        else if(data['msg']=='有课'){
+                            alert(data['msg'])
+                            javascript:window.location.href='/'
                         }
                         else {
                             alert(data['msg'])
@@ -51,20 +40,17 @@
         <div class="identity_form container">
 		  <div class="form-group">
 		    <label for="exampleInputEmail1">教室名称</label>
-		    <input type="text" class="form-control" id="className" placeholder="新平三/旧教101/电六" required="required" id="#YongInput1" name="classroom">
+		    <input type="text" class="form-control"  placeholder="101" required="required" id="YongInput1" name="classroom">
 		  </div>
             <div class="form-group">
 		    <label for="exampleInputEmail1">星期</label>
-		    <input type="text" class="form-control" id="YongInput3"  placeholder="星期xxx" required="required" name="sunday">
+		    <input type="text" class="form-control" id="YongInput3"  placeholder="1" required="required" name="sunday">
 		  </div>
-{#            <div class="form-group">#}
-{#		    <label for="exampleInputEmail1">第几节课</label>#}
-{#		    <input type="text" class="form-control"  placeholder="第xxx周" required="required" name="time">#}
-{#		  </div>#}
+
 
             <div class="form-group" style="margin-bottom: 30px">
 		    <label for="exampleInputEmail1">第几周</label>
-		    <input type="text" class="form-control" id="YongInput2" placeholder="第xxx周" required="required" name="date">
+		    <input type="text" class="form-control" id="YongInput2" placeholder="10" required="required" name="date">
 		  </div>
 
              <select class="custom-select custom-select-md mb-3" id="time1select" name="time"

@@ -167,6 +167,7 @@ def reservation():
                 sunday = request.form['sunday']
                 time = request.form['time']
                 date = request.form['date']
+
                 timetemp = time[1:-2].replace('"', "").split(",")
                 time = []
 
@@ -290,29 +291,21 @@ def find():
             assert "time" in request.form
             assert "date" in request.form
 
-            # now = datetime.datetime.now()
-            # start = datetime.datetime(2018, 9, 3, 0, 0, 0, 000000)
-            # diff = (now - start).days * 24 * 60 * 60 + (now - start).seconds
-            # week = int(diff / (7 * 24 * 60 * 60)) + 1
-            # sunday=(int(diff%(7*24*60*60)/(24*60*60)))+1
-            # hour=int(((diff%(7*24*60*60)%(24*60*60)))/(60*60))
-            # minute=int((((diff%(7*24*60*60)%(24*60*60)))%(60*60))/60)-4
-
             if "classroom" in request.form and "sunday" in request.form and "time" in request.form:
                 classroom = request.form['classroom']
                 sunday = request.form['sunday']
                 time = request.form['time']
                 date = request.form['date']
+
                 rooms = mongo.db.course_new.find_one({"classroom": str(classroom), "sunday": str(sunday), "time": str(time),"date":int(date)})
-                print(rooms)
                 if rooms==None:
-                    use = mongo.db.using.find_one({"classroom": str(classroom), "sunday": str(sunday), "time": str(time), "date": date,"user":str(currentuser)})
+                    use = mongo.db.using.find_one({"classroom": str(classroom), "sunday": str(sunday), "time": str(time), "date": date})
                     if use==None:
-                        return jsonify({"msg":"keyiyuding"})
+                        return jsonify({"msg":"可以预定"})
                     else:
-                        return jsonify({"msg":"yijingyuding"})
+                        return jsonify({"msg":"已经被预定!"})
                 else:
-                    return jsonify({"msg":"youke"})
+                    return jsonify({"msg":"有课"})
             else:
                 return jsonify({"error": "1", "msg": "Information should be completed"})
         else:
