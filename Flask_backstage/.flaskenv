@@ -1,5 +1,5 @@
-FLASK_ENV=development
-FLASK_DEBUG=True
+FLASK_ENV=product
+FLASK_DEBUG=False
 JWT_SECRET_KEY=
 FLASK_SECRET_KEY=sadfsdf
 FLASK_SECRET_KEY=sadfsdf
