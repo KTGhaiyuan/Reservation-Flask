@@ -5,14 +5,14 @@
     border-bottom: 1px solid #edeef0;
     margin:0px 0px 5px 0px;
     /*background-color: rgb(52,58,64);*/
-    background: #ccc;
+    /*background: #22262a;*/
     text-align: center;
 }
 .nav a{
 
     line-height: 50px;
     /*color: rgb(154,157,144);*/
-    color: black;
+    color: white;
     font-weight: bold;
     display: inline-block;
     text-decoration: none;
@@ -20,5 +20,5 @@
 }
 .nav a:hover{
     /*color: rgb(204,206,198);*/
-    color: rebeccapurple;
+    color: #aaaaaa;
 }

@@ -9,6 +9,7 @@
     {% block bootstrap4 %}
         {% include "global/bootstrap.html" %}
     {% endblock %}
+    <link rel="stylesheet" href="../static/css/nav.css">
     {% block stylesheet %}
 
     {% endblock %}
@@ -17,6 +18,7 @@
     {% block script %}{% endblock %}
 </head>
 <body>
+
 {% block flashmsg %}
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -34,6 +36,7 @@
     {% endwith %}
 
 {% endblock %}
+{% include "nav.html" %}
 
 {% block  body %}
 {% endblock %}

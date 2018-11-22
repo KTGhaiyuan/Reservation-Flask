@@ -1,0 +1,16 @@
+<div style="height: 50px;background-color: #22262a">
+    <div class="nav">
+        <a href="/">首页</a>
+        <a href="/reservation">预定教室</a>
+        <a href="/find">查询</a>
+
+        {% if currentuser %}
+            <a href="#" style="color: #ffffff">{{ currentuser }}</a>
+        {% else %}
+            <a href="/login" style="color: #ffffff">登录</a>
+            <a href="/register" style="color: #ffffff">注册</a>
+        {% endif %}
+
+
+    </div>
+</div>
