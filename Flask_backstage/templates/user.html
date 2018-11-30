@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %} {{ currentuser }}的主页{% endblock %}
+
+{% block body %}
+
+    {{ currentuser }}
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3" style="background-color: #ffc107;height: 500px;margin-right: 20px">
+                <button class="btn-light btn" id="data">我的资料</button>
+                <button class="btn-light btn" id="reservation">我的预约</button>
+                <button class="btn-light btn" id="timetable">我的课表</button>
+
+            </div>
+            <div class="col-md-8" style="background-color: #f5c6cb;height: 500px;">
+                <div id="data-content" style="background-color: #5bc0de">
+                    用户名{{ currentuser }}
+                    姓名:
+                    身份:
+
+                </div>
+                <div id="reservation-content" style="background-color: #000000">
+                    用户名{{ currentuser }}
+                    姓名:
+                    身份:
+
+                </div>
+                <div id="timetable-content" style="background-color: #0069d9">
+                    用户名{{ currentuser }}
+                    姓名:
+                    身份:
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        $("#data").on("click", function () {
+            $("#reservation-content").hide()
+            $("#timetable-content").hide()
+            $("#data-content").show()
+        });
+        $("#reservation").on("click", function () {
+            $("#timetable-content").hide()
+            $("#data-content").hide()
+            $("#reservation-content").show()
+        });
+        $("#timetable").on("click", function () {
+            $("#reservation-content").hide()
+            $("#data-content").hide()
+            $("#timetable-content").show()
+        })
+
+    </script>
+
+
+{% endblock %}

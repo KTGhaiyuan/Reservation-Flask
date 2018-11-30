@@ -20,6 +20,9 @@ app.config["SECRET_KEY"] = "super secret key"
 app.config["JWT_TOKEN_LOCATION"] = ['headers', 'cookies']
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = False
 app.config["JWT_COOKIE_CSRF_PROTECT"] = False
+app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
+
+
 
 mongo = PyMongo(app)
 jwt = JWTManager(app)
@@ -137,7 +140,7 @@ def login():
 
 @app.route("/room/<string:roomname>")
 def roomstatus(roomname):
-    room = mongo.db.course.find({"classroom":str(roomname)})
+    # room = mongo.db.course.find({"classroom":str(roomname)})
 
     now = datetime.datetime.now()  # 当前时间
     start = datetime.datetime(2018, 9, 3, 0, 0, 0, 000000)  # 开始时间
@@ -149,18 +152,27 @@ def roomstatus(roomname):
 
     time = utils.numtozh(utils.hourtonlessons(hour))  # 使用今天第几个小时转换成现在第几节课
 
+    youke=[]
 
+    for i in range(week,8):
+        room = mongo.db.course.find({"classroom": str(roomname),"sunday":str(i)})
 
+        for ii in room:
+            print("    :" + str(ii))
+            if dijizhou in ii['date']:
+                youke.append({"dijijie":ii['time'],"zhouji":int(ii['sunday']),"dijizhou":dijizhou})
+                print(ii)
 
+    for i in range(1,week):
+        room = mongo.db.course.find({"classroom": str(roomname), "sunday": str(i)})
 
+        for ii in room:
 
+            if dijizhou + 1 in ii['date']:
+                youke.append({"dijijie": ii['time'], "zhouji": int(ii['sunday']), "dijizhou": dijizhou + 1})
+                print(ii)
 
-
-    for i in room:
-        print(i)
-
-
-    return render_template("roomstatus.html", roomname=roomname)
+    return render_template("roomstatus.html", roomname=roomname,week=week,youke=youke ,todayweek=week,dijizhou={"thisweek":dijizhou,"nextweek":dijizhou+1}) #week 星期几
 
 
 @app.route("/testprotected", methods=["GET"])
@@ -181,11 +193,32 @@ def testoptional():
         return jsonify({"error": 1, "errmsg": "No access"})
 
 
+@app.route("/user/<string:username>")
+@jwt_required
+def user(username):
+    currentuser = get_jwt_identity()
+    if(currentuser!=username):
+        return "No Permission"
+    return render_template("user.html",currentuser=currentuser)
+
+
 @app.route('/reservation', methods=['POST', 'GET'])
 @jwt_required
 def reservation():
+    currentuser = get_jwt_identity()
+
     if (request.method == "GET"):
-        return render_template("reservation.html")
+
+        args=request.args
+
+        classroom=sunday=date=time=None
+
+        if("classroom" in args): classroom=args["classroom"]
+        if("sunday" in args): sunday=args["sunday"]
+        if("date" in args): date=args["date"]
+        if("time" in args): time=args["time"]
+
+        return render_template("reservation.html",currentuser=currentuser,classroom=classroom if classroom else "",sunday=sunday if sunday else "",date=date if date else "",time=time if time else "")
 
     elif (request.method == "POST"):
         currentuser = get_jwt_identity()
@@ -269,8 +302,22 @@ def index():
     # return redirect(url_for("login"))
 
 
+@jwt.claims_verification_failed_loader
+def claims_verification_failed_loader():
+    return "claims_verification_failed_loader"
+
+
+
+@jwt.invalid_token_loader
+def invalid_token_loader(e):
+    # flash(e)
+    flash("用户验证失败")
+    resp=make_response(redirect(url_for("index")))
+    resp.set_cookie("access_token_cookie",'',expires=0)
+    return resp
+
 @jwt.unauthorized_loader
-def invalid_token_loaderr(a):
+def unauthorized_loader():
     return redirect(url_for("login"))
 
 
@@ -355,7 +402,7 @@ def find():
         else:
             return jsonify({"error": "please login in first"})
     elif (request.method == "GET"):
-        return render_template("find.html")
+        return render_template("find.html",currentuser=currentuser)
 
 
 if __name__ == '__main__':

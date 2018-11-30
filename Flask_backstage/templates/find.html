@@ -9,24 +9,27 @@
         $(document).ready(function () {
 
             $("#chaxun").click(function () {
+                var classroom= $('#YongInput1').val();
+                var sunday= $('#YongInput3').val();
+                var date= $('#YongInput2').val();
+                var time= $('#time1select').val();
+
                 $.post("/find",
                     {
-                        classroom: $('#YongInput1').val(),
-                        sunday: $('#YongInput3').val(),
-                        date: $('#YongInput2').val(),
-                        time: $('#time1select').val()
+                        classroom: classroom,
+                        sunday: sunday,
+                        date: date,
+                        time: time
                     },
                     function (data) {
 
                         if (data['msg'] == '可以预定') {
                             alert(data['msg'])
-                            javascript:window.location.href='/reservation'
-                        }
-                        else if(data['msg']=='有课'){
+                            javascript:window.location.href = '/reservation?classroom=' + classroom + "&sunday=" + sunday + "&date=" + date + "&time=" + time
+                        } else if (data['msg'] == '有课') {
                             alert(data['msg'])
-                            javascript:window.location.href='/'
-                        }
-                        else {
+                            javascript:window.location.href = '/'
+                        } else {
                             alert(data['msg'])
                         }
                     });
@@ -36,47 +39,48 @@
 {% endblock %}
 {% block body %}
 
-{#    <form action='/find' method="post">#}
-        <div class="identity_form container">
-		  <div class="form-group">
-		    <label for="exampleInputEmail1">教室名称</label>
-		    <input type="text" class="form-control"  placeholder="101" required="required" id="YongInput1" name="classroom">
-		  </div>
-            <div class="form-group">
-		    <label for="exampleInputEmail1">星期</label>
-		    <input type="text" class="form-control" id="YongInput3"  placeholder="1" required="required" name="sunday">
-		  </div>
-
-
-            <div class="form-group" style="margin-bottom: 30px">
-		    <label for="exampleInputEmail1">第几周</label>
-		    <input type="text" class="form-control" id="YongInput2" placeholder="10" required="required" name="date">
-		  </div>
-
-             <select class="custom-select custom-select-md mb-3" id="time1select" name="time"
-                    style="width: 360px;">
-                <option value="none" selected>使用时间</option>
-                <option value="一">第一节</option>
-                <option value="二">第二节</option>
-                <option value="三">第三节</option>
-                <option value="四">第四节</option>
-                <option value="五">第五节</option>
-                <option value="六">第六节</option>
-                <option value="七">第七节</option>
-                <option value="八">第八节</option>
-                <option value="九">第九节</option>
-                <option value="十">第十节</option>
-                <option value="十一">第十一节</option>
-                <option value="十二">第十二节</option>
-            </select>
-
-
-		  <button class="btn btn-primary" id="chaxun">查询</button>
-            <a href="/" class=" btn btn-primary">返回主页</a>
-
-
+    {#    <form action='/find' method="post">#}
+    <div class="identity_form container">
+        <div class="form-group">
+            <label for="exampleInputEmail1">教室名称</label>
+            <input type="text" class="form-control" placeholder="101" required="required" id="YongInput1"
+                   name="classroom">
         </div>
-{#        </form>#}
+        <div class="form-group">
+            <label for="exampleInputEmail1">星期</label>
+            <input type="text" class="form-control" id="YongInput3" placeholder="1" required="required" name="sunday">
+        </div>
+
+
+        <div class="form-group" style="margin-bottom: 30px">
+            <label for="exampleInputEmail1">第几周</label>
+            <input type="text" class="form-control" id="YongInput2" placeholder="10" required="required" name="date">
+        </div>
+
+        <select class="custom-select custom-select-md mb-3" id="time1select" name="time"
+                style="width: 360px;">
+            <option value="none" selected>使用时间</option>
+            <option value="一">第一节</option>
+            <option value="二">第二节</option>
+            <option value="三">第三节</option>
+            <option value="四">第四节</option>
+            <option value="五">第五节</option>
+            <option value="六">第六节</option>
+            <option value="七">第七节</option>
+            <option value="八">第八节</option>
+            <option value="九">第九节</option>
+            <option value="十">第十节</option>
+            <option value="十一">第十一节</option>
+            <option value="十二">第十二节</option>
+        </select>
+
+
+        <button class="btn btn-primary" id="chaxun">查询</button>
+        <a href="/" class=" btn btn-primary">返回主页</a>
+
+
+    </div>
+    {#        </form>#}
 {% endblock %}
 
 
@@ -90,6 +94,6 @@
 
 {% block end %}
     <script src="../static/lib/jquery/jquery.js"></script>
-	<script src="../static/js/identity.js"></script>
-	<script src="../static/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="../static/js/identity.js"></script>
+    <script src="../static/lib/bootstrap/js/bootstrap.js"></script>
 {% endblock %}

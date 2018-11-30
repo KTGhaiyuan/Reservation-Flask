@@ -5,7 +5,7 @@
         <a href="/find">查询</a>
 
         {% if currentuser %}
-            <a href="#" style="color: #ffffff">{{ currentuser }}</a>
+            <a href="/user/{{ currentuser }}" style="color: #ffffff">{{ currentuser }}</a>
         {% else %}
             <a href="/login" style="color: #ffffff">登录</a>
             <a href="/register" style="color: #ffffff">注册</a>

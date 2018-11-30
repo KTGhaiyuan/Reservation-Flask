@@ -31,12 +31,11 @@
                             tempstr = tempstr + "取消成功\n"
 
                             for (i = 0; i < b.length; i++) {
-                                tempstr = tempstr + "room:" + b[i]["classroom"] + "第"+b[i]["time"]+'节\n'
+                                tempstr = tempstr + "room:" + b[i]["classroom"] + "第" + b[i]["time"] + '节\n'
                                 console.log(tempstr)
                             }
                             alert(tempstr)
-                        }
-                        else {
+                        } else {
                             alert(data['msg'])
                         }
 
@@ -68,12 +67,11 @@
                             tempstr = tempstr + "预定成功\n"
 
                             for (i = 0; i < b.length; i++) {
-                                tempstr = tempstr + "room:" + b[i]["classroom"] + "第"+b[i]["time"]+'节\n'
+                                tempstr = tempstr + "room:" + b[i]["classroom"] + "第" + b[i]["time"] + '节\n'
                                 console.log(tempstr)
                             }
                             alert(tempstr)
-                        }
-                        else {
+                        } else {
                             alert(data['msg'])
                         }
 
@@ -96,23 +94,24 @@
             <div class="form-group">
                 <label for="exampleInputEmail1">教室</label>
                 <input type="text" class="form-control" id="YongInput1" placeholder="教室" required="required"
-                       style="width: 290px" name="classroom">
+                       style="width: 290px" name="classroom" value="{{ classroom }}">
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1"> 第几周</label>
                 <input type="text" class="form-control" id="YongInput2" placeholder="第几周" required="required"
                        style="width: 290px"
-                       name="date">
+                       name="date" value="{{ date }}">
             </div>
             <div class="form-group">
                 <label for="exampleInputEmail1"> 星期</label>
                 <input type="text" class="form-control" id="YongInput3" placeholder="星期几" required="required"
                        style="width: 290px"
-                       name="sunday">
+                       name="sunday" value="{{ sunday }}">
             </div>
 
             <select class="custom-select custom-select-md mb-1" id="time1select" name="time"
                     style="width: 143px;">
+
                 <option value="none" selected>使用时间</option>
                 <option value="一">第一节</option>
                 <option value="二">第二节</option>
@@ -127,6 +126,13 @@
                 <option value="十一">第十一节</option>
                 <option value="十二">第十二节</option>
             </select>
+
+            {% if time in ['一','二','三','四','五','六','七','八','九','十','十一','十二'] %}
+                <script>
+                    $("#time1select option[value='{{ time }}']").attr("selected", true)
+                </script>
+            {% endif %}
+
 
             <button id="addtime" class="btn btn-primary btn-sm mb-1 " style="border-radius: 0.1rem">+</button>
             <script>
