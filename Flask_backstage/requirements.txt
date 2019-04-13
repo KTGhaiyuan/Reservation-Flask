@@ -8,7 +8,7 @@ Flask-PyMongo==2.1.0
 Flask-Script==2.0.6
 Flask-SQLAlchemy==2.3.2
 Flask-WTF==0.14.2
-Jinja2==2.10
+Jinja2==2.10.1
 pymongo==3.7.2
 python-dotenv==0.9.1
 Werkzeug==0.14.1
